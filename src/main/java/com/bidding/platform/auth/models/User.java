@@ -24,31 +24,45 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "full_name", nullable = false)
     private String fullname;
 
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    // OPTIONAL (for future password login if needed)
+    @Column(nullable = true)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private Long phoneNo;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(name = "is_email_verified")
+    private boolean isEmailVerified = false;
+
+    @Column(name = "is_kyc_completed")
+    private boolean isKycCompleted = false;
+
+    @Column(name = "is_payment_completed")
+    private boolean isPaymentCompleted = false;
+
+    @Column(nullable = false)
+    private String status; // INCOMPLETE, ACTIVE, BLOCKED
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -60,6 +74,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
+    /* ===== Spring Security Overrides ===== */
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
@@ -67,7 +83,32 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return email; // still correct
+    }
+
+    @Override
+    public String getPassword() {
+        return password; // can be null
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !"BLOCKED".equals(status);
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isEmailVerified;
     }
 
 }

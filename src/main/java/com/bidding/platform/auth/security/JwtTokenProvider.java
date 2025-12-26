@@ -37,7 +37,8 @@ public class JwtTokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .orElse(null);
 
-        User user = userRepo.findByEmail(userDetails.getUsername());
+        User user = userRepo.findByEmail(userDetails.getUsername())
+        		.orElseThrow(() -> new RuntimeException("USER_NOT_REGISTERED"));
         return Jwts.builder()
                 .claim("sub", userDetails.getUsername())
                 .claim("role", role)

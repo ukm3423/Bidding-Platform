@@ -1,9 +1,6 @@
 package com.bidding.platform.auth.dto;
 
-import java.time.LocalDate;
-
 import com.bidding.platform.auth.models.Role;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,13 +18,9 @@ public class UserDTO {
 
     private String email;
 
-    private String password;
-
-    private LocalDate dob;
-
     private Long phoneNo;
 
-    private Role role;
+    private Role role; // BUYER / SELLER
 
-    private String message;
+    private String message; // OTP_SENT, VERIFIED, ERROR
 }

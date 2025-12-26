@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bidding.platform.auth.dto.JwtRequest;
 import com.bidding.platform.auth.dto.JwtResponse;
+import com.bidding.platform.auth.dto.OtpRequest;
+import com.bidding.platform.auth.dto.SendOtpRequest;
+import com.bidding.platform.auth.dto.SendOtpResponse;
 import com.bidding.platform.auth.dto.UserDTO;
 import com.bidding.platform.auth.models.Token;
 import com.bidding.platform.auth.models.TokenType;
@@ -26,6 +30,7 @@ import com.bidding.platform.auth.models.User;
 import com.bidding.platform.auth.repository.TokenRepository;
 import com.bidding.platform.auth.repository.UserRepository;
 import com.bidding.platform.auth.security.JwtTokenProvider;
+import com.bidding.platform.auth.services.OtpService;
 import com.bidding.platform.auth.services.UserDetailsServiceImpl;
 
 import io.swagger.v3.oas.annotations.Hidden;
@@ -67,53 +72,106 @@ public class JwtAuthController {
 
     @Autowired
     private TokenRepository tokenRepo;
+    
+    @Autowired
+    private OtpService otpService;
+
 
     /**
-     * * Register a new user
+     * Registers a new buyer or seller on the bidding platform and sends a one-time password (OTP) to the user’s email for verification.
+     * This API is used only for new users who do not already have an account.
      * @param req
      * @return
-     * @throws Exception
      */
     @PostMapping("/register")
-    public UserDetails saveUser(@RequestBody UserDTO req) throws Exception {
+    public UserDTO register(@RequestBody UserDTO req) {
 
         User user = User.builder()
                 .fullname(req.getFullname())
                 .email(req.getEmail())
-                .password(req.getPassword())
-                .role(req.getRole())
+                .role(req.getRole()) // BUYER / SELLER
                 .phoneNo(req.getPhoneNo())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .status("INCOMPLETE")
+                .isEmailVerified(false)
                 .build();
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userDetailsService.save(user);
+        userRepo.save(user);
 
+        otpService.sendOtp(user);
+
+        return UserDTO.builder()
+                .message("OTP_SENT")
+                .build();
     }
-
+    
     /**
-     * * For Testing Purposes only
-     * 
-     * @param req
+     * Verifies the OTP sent to the user’s email and authenticates the user by issuing a JWT access token.
+     * This API completes both registration verification and login authentication.
+     * @param request
      * @return
      */
-    @Hidden
-    @GetMapping("/register")
-    public UserDTO test(@RequestBody UserDTO req) {
-        User user = User.builder()
-                .fullname(req.getFullname())
-                .email(req.getEmail())
-                .password(req.getPassword())
-                .role(req.getRole())
-                .phoneNo(req.getPhoneNo())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+    @PostMapping("/verify-otp")
+    public JwtResponse verifyOtp(@RequestBody OtpRequest request) {
 
-        return req;
+        // 1. Validate OTP
+        boolean isValid = otpService.verifyOtp(request.getEmail(), request.getOtp());
+        if (!isValid) {
+            throw new RuntimeException("Invalid OTP");
+        }
+
+        // 2. Fetch user
+        User user = userRepo.findByEmail(request.getEmail())
+        		.orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setEmailVerified(true);
+        user.setStatus("ACTIVE");
+        userRepo.save(user);
+
+        // 3. MANUAL authentication (NO password)
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(
+                        user,
+                        null,
+                        user.getAuthorities()
+                );
+
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        // 4. Generate JWT
+        String jwt = jwtUtil.generateToken(user);
+
+        // 5. Token DB handling (same as before)
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwt);
+
+        return new JwtResponse(jwt);
+    }
+    
+    /**
+     * Sends a login OTP to an already registered user’s email address.
+     * This API is used during the login process when a user wants to sign in to their account.
+     * @param request
+     * @return
+     */
+    @PostMapping("/send-otp")
+    public SendOtpResponse sendOtp(@RequestBody SendOtpRequest request) {
+
+        // 1. Check user exists
+        User user = userRepo.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("USER_NOT_REGISTERED"));
+
+        // 2. Check user status
+        if ("BLOCKED".equalsIgnoreCase(user.getStatus())) {
+            throw new RuntimeException("USER_BLOCKED");
+        }
+
+        // 3. Send OTP
+        otpService.sendOtp(user);
+
+        return new SendOtpResponse("OTP_SENT");
     }
 
+    
     /**
      * * User Login
      * 
@@ -130,7 +188,8 @@ public class JwtAuthController {
                 .loadUserByUsername(authenticationRequest.getEmail());
 
         final String token = jwtUtil.generateToken(userDetails);
-        User user = userRepo.findByEmail(userDetails.getUsername());
+        User user = userRepo.findByEmail(userDetails.getUsername())
+        		.orElseThrow(() -> new RuntimeException("User not found"));
         revokeAllUserTokens(user);
         saveUserToken(user, token);
         System.out.println("\n\nUser Email : " + userDetails.getUsername());
