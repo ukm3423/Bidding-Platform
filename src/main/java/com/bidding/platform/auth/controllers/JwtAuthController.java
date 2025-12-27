@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bidding.platform.auth.dto.JwtRequest;
 import com.bidding.platform.auth.dto.JwtResponse;
+import com.bidding.platform.auth.dto.OtpAuthResponse;
 import com.bidding.platform.auth.dto.OtpRequest;
 import com.bidding.platform.auth.dto.SendOtpRequest;
 import com.bidding.platform.auth.dto.SendOtpResponse;
@@ -111,7 +112,7 @@ public class JwtAuthController {
      * @return
      */
     @PostMapping("/verify-otp")
-    public JwtResponse verifyOtp(@RequestBody OtpRequest request) {
+    public OtpAuthResponse verifyOtp(@RequestBody OtpRequest request) {
 
         // 1. Validate OTP
         boolean isValid = otpService.verifyOtp(request.getEmail(), request.getOtp());
@@ -121,13 +122,14 @@ public class JwtAuthController {
 
         // 2. Fetch user
         User user = userRepo.findByEmail(request.getEmail())
-        		.orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // 3. Update user status
         user.setEmailVerified(true);
         user.setStatus("ACTIVE");
         userRepo.save(user);
 
-        // 3. MANUAL authentication (NO password)
+        // 4. Manual authentication (NO password)
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(
                         user,
@@ -137,15 +139,20 @@ public class JwtAuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
-        // 4. Generate JWT
+        // 5. Generate JWT
         String jwt = jwtUtil.generateToken(user);
 
-        // 5. Token DB handling (same as before)
+        // 6. Token DB handling
         revokeAllUserTokens(user);
         saveUserToken(user, jwt);
 
-        return new JwtResponse(jwt);
+        // ✅ 7. RETURN WHAT FRONTEND EXPECTS
+        return new OtpAuthResponse(
+                jwt,
+                user.getRole().name()   // BUYER / SELLER / ADMIN
+        );
     }
+
     
     /**
      * Sends a login OTP to an already registered user’s email address.
