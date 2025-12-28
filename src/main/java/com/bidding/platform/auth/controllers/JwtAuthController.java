@@ -146,7 +146,7 @@ public class JwtAuthController {
         revokeAllUserTokens(user);
         saveUserToken(user, jwt);
 
-        // ✅ 7. RETURN WHAT FRONTEND EXPECTS
+        // 7. RETURN WHAT FRONTEND EXPECTS
         return new OtpAuthResponse(
                 jwt,
                 user.getRole().name()   // BUYER / SELLER / ADMIN

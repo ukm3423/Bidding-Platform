@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF since we are using JWT
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/login", "/register", "/verify-otp", "/send-otp", "/check-validity", "/api/city/{id}",
-                                "/api/city/get-list",
+                                "/api/city/get-list", "/buyer/complete",
                                 "/swagger-ui", "v3/api-docs", "/v3/api-docs/**", "/swagger-resources",
                                 "swagger-resources/**", "/configuration/ui", "/configuration/security",
                                 "/swagger-ui/**", "/webjars/**", "/swagger-ui.html")
