@@ -27,7 +27,7 @@ import com.bidding.platform.users.repo.UserProductInterestRepository;
 @CrossOrigin
 @RestController
 @RequestMapping("/buyer")
-public class UserController {
+public class BuyerController {
 	
 	@Autowired
 	private CompanyRepository companyRepo;

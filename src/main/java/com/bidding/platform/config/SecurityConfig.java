@@ -3,7 +3,9 @@ package com.bidding.platform.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -41,8 +43,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+        		.cors(Customizer.withDefaults()) 
                 .csrf(csrf -> csrf.disable()) // Disable CSRF since we are using JWT
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                		.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/login", "/register", "/verify-otp", "/send-otp", "/check-validity", "/api/city/{id}",
                                 "/api/city/get-list", "/buyer/complete",
                                 "/swagger-ui", "v3/api-docs", "/v3/api-docs/**", "/swagger-resources",
