@@ -49,7 +49,7 @@ public class FileService {
                             .build()
             );
 
-            return bucket + "/" + fileName;
+            return fileName;
 
         } catch (Exception e) {
             throw new RuntimeException("FILE_UPLOAD_FAILED", e);

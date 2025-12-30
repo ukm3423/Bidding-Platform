@@ -1,4 +1,4 @@
-package com.bidding.platform.usermanagement;
+package com.bidding.platform.seller.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,9 +19,9 @@ import com.bidding.platform.auth.models.User;
 import com.bidding.platform.auth.repository.UserRepository;
 import com.bidding.platform.common.dto.ApiResponse;
 import com.bidding.platform.common.services.FileService;
+import com.bidding.platform.seller.repository.SellerKycRepository;
 import com.bidding.platform.users.repo.CompanyRepository;
 import com.bidding.platform.users.repo.ContactDetailsRepository;
-import com.bidding.platform.users.repo.SellerKycRepository;
 
 @CrossOrigin
 @RestController

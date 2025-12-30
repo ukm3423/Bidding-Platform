@@ -1,4 +1,4 @@
-package com.bidding.platform.users.repo;
+package com.bidding.platform.seller.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
