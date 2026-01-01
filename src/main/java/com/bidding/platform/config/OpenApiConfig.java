@@ -32,6 +32,10 @@ import io.swagger.v3.oas.annotations.servers.Server;
             description="Local Server"
         ),
         @Server(
+            url="https://10.163.75.4:8080",
+            description="Production Server"
+        ),
+        @Server(
             url="https://your-api-server.com",
             description="Production Server"
         )
