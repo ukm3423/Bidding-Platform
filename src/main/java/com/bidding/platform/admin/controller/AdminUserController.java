@@ -18,7 +18,7 @@ import com.bidding.platform.auth.models.Role;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/admin/users")
+@RequestMapping("api/admin/users")
 @RequiredArgsConstructor
 @CrossOrigin
 public class AdminUserController {

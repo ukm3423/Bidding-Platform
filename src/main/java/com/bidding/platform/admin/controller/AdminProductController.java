@@ -18,6 +18,7 @@ import com.bidding.platform.admin.dto.ProductParameterDto;
 import com.bidding.platform.admin.model.Product;
 import com.bidding.platform.admin.services.ProductService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -31,7 +32,7 @@ public class AdminProductController {
 	private ProductService productService;
 	// For Creation of Product 30/12/2025
 	@PostMapping
-	public ResponseEntity<Product> createProduct(@RequestBody ProductCreateRequest request){
+	public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductCreateRequest request){
 		return ResponseEntity.ok(productService.createProduct(request));
 	}
 	
@@ -44,7 +45,7 @@ public class AdminProductController {
     @PostMapping("/{id}/parameters")
     public ResponseEntity<Product> addProductParameters(
             @PathVariable Long id, 
-            @RequestBody List<ProductParameterDto> parameters) {
+            @Valid @RequestBody List<ProductParameterDto> parameters) {
         
         System.out.println("Adding parameters to Product ID: " + id);
         return ResponseEntity.ok(productService.addParameters(id, parameters));

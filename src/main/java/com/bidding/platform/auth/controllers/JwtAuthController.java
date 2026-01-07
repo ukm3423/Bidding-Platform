@@ -33,11 +33,14 @@ import com.bidding.platform.auth.repository.UserRepository;
 import com.bidding.platform.auth.security.JwtTokenProvider;
 import com.bidding.platform.auth.services.OtpService;
 import com.bidding.platform.auth.services.UserDetailsServiceImpl;
+import com.bidding.platform.common.dto.ErrorCode;
+import com.bidding.platform.common.exceptions.BusinessException;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -66,9 +69,6 @@ public class JwtAuthController {
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private UserRepository userRepo;
 
     @Autowired
@@ -85,13 +85,20 @@ public class JwtAuthController {
      * @return
      */
     @PostMapping("/register")
-    public UserDTO register(@RequestBody UserDTO req) {
+    public UserDTO register(@Valid @RequestBody UserDTO req) {
+
+    	if (userRepo.existsByEmail(req.getEmail())) {
+            throw new BusinessException(
+                    ErrorCode.EMAIL_ALREADY_EXISTS,
+                    "This email is already registered"
+            );
+        }
 
         User user = User.builder()
                 .fullname(req.getFullname())
                 .email(req.getEmail())
                 .role(req.getRole()) // BUYER / SELLER
-                .phoneNo(req.getPhoneNo())
+                .phoneNo(Long.parseLong(req.getPhoneNo()))
                 .status("INCOMPLETE")
                 .isEmailVerified(false)
                 .build();
@@ -112,7 +119,7 @@ public class JwtAuthController {
      * @return
      */
     @PostMapping("/verify-otp")
-    public OtpAuthResponse verifyOtp(@RequestBody OtpRequest request) {
+    public OtpAuthResponse verifyOtp(@Valid @RequestBody OtpRequest request) {
 
         // 1. Validate OTP
         boolean isValid = otpService.verifyOtp(request.getEmail(), request.getOtp());
@@ -161,7 +168,7 @@ public class JwtAuthController {
      * @return
      */
     @PostMapping("/send-otp")
-    public SendOtpResponse sendOtp(@RequestBody SendOtpRequest request) {
+    public SendOtpResponse sendOtp(@Valid @RequestBody SendOtpRequest request) {
 
         // 1. Check user exists
         User user = userRepo.findByEmail(request.getEmail())

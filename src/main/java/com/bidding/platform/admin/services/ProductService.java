@@ -1,6 +1,8 @@
 package com.bidding.platform.admin.services;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import com.bidding.platform.admin.model.ProductParameter;
 import com.bidding.platform.admin.repository.CategoryRepository;
 import com.bidding.platform.admin.repository.ProductParameterRepository;
 import com.bidding.platform.admin.repository.ProductRepository;
+import com.bidding.platform.common.dto.ErrorCode;
+import com.bidding.platform.common.exceptions.BusinessException;
 
 import jakarta.transaction.Transactional;
 
@@ -33,22 +37,24 @@ public class ProductService {
 		return categoryRepository.findAll();
 	}
 	
-	//Added for Creation of Products 30/12/2025
+    // -----------------------------
+    // CREATE PRODUCT
+    // -----------------------------
 	@Transactional
 	public Product createProduct(ProductCreateRequest request) {
-	    if (request.getCategoryId() == null) {
-	        throw new IllegalArgumentException("Category ID cannot be null");
-	    }
-	    if (request.getName() == null || request.getName().isEmpty()) {
-	        throw new IllegalArgumentException("Product Name cannot be empty");
-	    }
-
-	    if (productRepository.existsByName(request.getName())) {
-	        throw new RuntimeException("Product with this name already exists");
-	    }
-
+	    
 	    Category category = categoryRepository.findById(request.getCategoryId())
-	        .orElseThrow(() -> new RuntimeException("Category not found with ID: " + request.getCategoryId()));
+                .orElseThrow(() -> new BusinessException(
+                        ErrorCode.CATEGORY_NOT_FOUND,
+                        "Category not found with ID: " + request.getCategoryId()
+                ));
+
+	    if (productRepository.existsByNameAndCategory(request.getName(), category)) {
+            throw new BusinessException(
+                    ErrorCode.PRODUCT_ALREADY_EXISTS,
+                    "Product with this name already exists in this category"
+            );
+        }
 
 	    // 4. Create and Save Product
 	    Product product = new Product();
@@ -59,22 +65,49 @@ public class ProductService {
 
 	    return productRepository.save(product);
 	}
+	
+    // -----------------------------
+    // GET ALL PRODUCTS
+    // -----------------------------
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
     
-    // Added the Addition of Params in Products
+    // -----------------------------
+    // ADD PARAMETERS TO PRODUCT
+    // -----------------------------
     @Transactional
     public Product addParameters(Long productId, List<ProductParameterDto> parameterDtos) {
+        
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
+                .orElseThrow(() -> new BusinessException(
+                        ErrorCode.PRODUCT_NOT_FOUND,
+                        "Product not found with ID: " + productId
+                ));
 
+        if (parameterDtos == null || parameterDtos.isEmpty()) {
+            throw new BusinessException(
+                    ErrorCode.BAD_REQUEST,
+                    "Parameters list cannot be empty"
+            );
+        }
+        
+        Set<String> names = new HashSet<>();
+        for (ProductParameterDto dto : parameterDtos) {
+            if (!names.add(dto.getParamName().trim())) {
+                throw new BusinessException(
+                        ErrorCode.DUPLICATE_PARAMETER,
+                        "Duplicate parameter name: " + dto.getParamName()
+                );
+            }
+        }
+        
         List<ProductParameter> parameters = parameterDtos.stream().map(dto -> {
             ProductParameter param = new ProductParameter();
             param.setProduct(product);
             param.setParamName(dto.getParamName());
             param.setDataType(dto.getDataType());
-            param.setIsMandatory(dto.isMandatory());
+            param.setIsMandatory(dto.getIsMandatory());
             return param;
         }).toList();
         productParameterRepository.saveAll(parameters);

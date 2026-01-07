@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,15 +13,22 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserDTO {
 
-    private Long id;
-
+    @NotBlank(message = "Full name is required")
+    @Size(min = 3, max = 100)
     private String fullname;
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
     private String email;
 
-    private Long phoneNo;
-
+    @NotNull(message = "Role is required")
     private Role role; // BUYER / SELLER
 
-    private String message; // OTP_SENT, VERIFIED, ERROR
+    @Pattern(
+        regexp = "^[6-9]\\d{9}$",
+        message = "Invalid Indian mobile number"
+    )
+    private String phoneNo;
+
+    private String message;
 }
