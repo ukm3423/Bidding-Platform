@@ -15,9 +15,10 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of(
-            "http://localhost:5173",
-            "http://10.163.75.4:5173"
+        config.setAllowedOriginPatterns(List.of(
+            "https://test.supplr.in",  // Production frontend domain
+            "http://localhost:5173",   // Local dev
+            "http://127.0.0.1:5173"    // Local dev alternative
         ));
 
         config.setAllowedMethods(List.of(
@@ -40,3 +41,4 @@ public class CorsConfig {
         return source;
     }
 }
+

@@ -37,6 +37,9 @@ public class EmailOtp {
 
     @Column(nullable = false)
     private boolean isUsed = false;
+    
+    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    private Long attemptCount;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

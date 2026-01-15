@@ -2,6 +2,8 @@ package com.bidding.platform.admin.dto;
 
 
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.*;
@@ -21,4 +23,7 @@ public class ProductCreateRequest {
     
     @Size(min = 10, max = 500, message = "Description must be between 10 and 500 characters")
     private String description;
+    
+    @NotNull(message = "Product image is required")
+    private MultipartFile image;
 }

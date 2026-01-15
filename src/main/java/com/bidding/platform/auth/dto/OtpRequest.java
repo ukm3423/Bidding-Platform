@@ -20,5 +20,9 @@ public class OtpRequest {
         regexp = "^[0-9]{6}$",
         message = "OTP must be 6 digits"
     )
+    @NotBlank(message = "OTP is required")
     private String otp;
+    
+    @NotBlank(message = "Role is required")
+    private String role;
 }

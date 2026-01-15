@@ -33,6 +33,8 @@ public class Product {
     private Category category; // <--- ADDED THIS LINK
 	private String description;
 	
+	private String productUrl;
+	
 	private Boolean isActive =true;
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProductParameter> parameters = new ArrayList<>();

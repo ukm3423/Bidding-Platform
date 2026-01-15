@@ -11,6 +11,7 @@ import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 
 @Service
 public class FileService {
@@ -55,4 +56,19 @@ public class FileService {
             throw new RuntimeException("FILE_UPLOAD_FAILED", e);
         }
     }
+    
+    public void delete(String objectName) {
+        try {
+            minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(objectName)
+                    .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("FILE_DELETE_FAILED: " + objectName, e);
+        }
+    }
+
+
 }

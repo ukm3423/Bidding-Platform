@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,10 +42,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+@Slf4j
 @Tag(name="JWT Authentication")
 @RestController
 @CrossOrigin
@@ -98,7 +101,7 @@ public class JwtAuthController {
                 .fullname(req.getFullname())
                 .email(req.getEmail())
                 .role(req.getRole()) // BUYER / SELLER
-                .phoneNo(Long.parseLong(req.getPhoneNo()))
+//                .phoneNo(Long.parseLong(req.getPhoneNo()))
                 .status("INCOMPLETE")
                 .isEmailVerified(false)
                 .build();
@@ -124,7 +127,7 @@ public class JwtAuthController {
         // 1. Validate OTP
         boolean isValid = otpService.verifyOtp(request.getEmail(), request.getOtp());
         if (!isValid) {
-            throw new RuntimeException("Invalid OTP");
+        	throw new BusinessException(ErrorCode.INVALID_OTP, "OTP not found or expired");
         }
 
         // 2. Fetch user
@@ -168,22 +171,33 @@ public class JwtAuthController {
      * @return
      */
     @PostMapping("/send-otp")
-    public SendOtpResponse sendOtp(@Valid @RequestBody SendOtpRequest request) {
+    public ResponseEntity<SendOtpResponse> sendOtp(@Valid @RequestBody SendOtpRequest request) {
 
-        // 1. Check user exists
         User user = userRepo.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("USER_NOT_REGISTERED"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_REGISTERED, "User is not registered."));
 
-        // 2. Check user status
-        if ("BLOCKED".equalsIgnoreCase(user.getStatus())) {
-            throw new RuntimeException("USER_BLOCKED");
+        // Validate role
+        if (!user.getRole().name().equalsIgnoreCase(request.getRole())) {
+            throw new BusinessException(ErrorCode.ROLE_MISMATCH,
+                    "This email is not registered as " + request.getRole());
         }
 
-        // 3. Send OTP
+        // Validate status
+        if ("BLOCKED".equalsIgnoreCase(user.getStatus())) {
+            throw new BusinessException(ErrorCode.USER_BLOCKED, "User account is blocked.");
+        }
+
+        if (!"ACTIVE".equalsIgnoreCase(user.getStatus())) {
+            throw new BusinessException(ErrorCode.USER_INACTIVE, "User account is not active.");
+        }
+
+        // SEND OTP (rate-limit inside service)
         otpService.sendOtp(user);
 
-        return new SendOtpResponse("OTP_SENT");
+        return ResponseEntity.ok(new SendOtpResponse("OTP_SENT"));
     }
+    
+
 
     
     /**
@@ -203,7 +217,7 @@ public class JwtAuthController {
 
         final String token = jwtUtil.generateToken(userDetails);
         User user = userRepo.findByEmail(userDetails.getUsername())
-        		.orElseThrow(() -> new RuntimeException("User not found"));
+        		.orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND,"User not found"));
         revokeAllUserTokens(user);
         saveUserToken(user, token);
         System.out.println("\n\nUser Email : " + userDetails.getUsername());

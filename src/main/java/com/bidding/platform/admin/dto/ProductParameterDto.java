@@ -4,6 +4,7 @@ package com.bidding.platform.admin.dto;
 
 import com.bidding.platform.admin.model.DataType;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class ProductParameterDto {
 
     @NotBlank(message = "Parameter name cannot be empty")

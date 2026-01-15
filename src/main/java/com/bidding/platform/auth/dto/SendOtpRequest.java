@@ -14,4 +14,7 @@ public class SendOtpRequest {
 	@NotBlank(message = "Email is required")
     @Email
     private String email;
+	
+	@NotBlank(message = "Role is required")
+    private String role; //
 }
