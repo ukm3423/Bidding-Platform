@@ -15,6 +15,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ProductParameterDto {
+	
+	private Long id;
 
     @NotBlank(message = "Parameter name cannot be empty")
     @Size(min = 2, max = 100, message = "Parameter name must be between 2 and 100 characters")
@@ -25,5 +27,5 @@ public class ProductParameterDto {
 
     private Boolean isMandatory;
     
-    private String unit;
+    private Double unit;
 }

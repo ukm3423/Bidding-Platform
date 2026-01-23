@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,4 +55,24 @@ public class AdminProductController {
         return ResponseEntity.ok(productService.addParameters(id, parameters));
     }
 
+    @DeleteMapping("/{productId}/parameters/{paramId}")
+    public ResponseEntity<?> deleteParameter(
+            @PathVariable Long productId,
+            @PathVariable Long paramId
+    ) {
+    	productService.deleteParameter(productId, paramId);
+        return ResponseEntity.ok().body("Parameter deleted successfully");
+    }
+    
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
+        boolean deleted = productService.deleteProduct(productId);
+        if (deleted) {
+            return ResponseEntity.ok().body("Product deleted successfully");
+        } else {
+            return ResponseEntity.status(404).body("Product not found");
+        }
+    }
+    
+    
 }

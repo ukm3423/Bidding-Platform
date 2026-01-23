@@ -2,6 +2,7 @@ package com.bidding.platform.admin.services;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ import com.bidding.platform.admin.model.ProductParameter;
 import com.bidding.platform.admin.repository.CategoryRepository;
 import com.bidding.platform.admin.repository.ProductParameterRepository;
 import com.bidding.platform.admin.repository.ProductRepository;
+import com.bidding.platform.buyer.dto.ProductParameterResponse;
 import com.bidding.platform.common.dto.ErrorCode;
 import com.bidding.platform.common.exceptions.BusinessException;
 import com.bidding.platform.common.services.FileService;
@@ -130,11 +132,11 @@ public class ProductService {
 	                        product.getCategory().getCategoryUrl()
 	                ),
 	                product.getParameters().stream().map(param -> 
-	                    new ProductParameterDto(
+	                    new ProductParameterDto(param.getId(),
 	                        param.getParamName(),
 	                        param.getDataType(),
 	                        param.getIsMandatory(),
-	                        "null"
+	                        param.getUnit()
 	                    )
 	                ).toList()
 	        );
@@ -177,6 +179,7 @@ public class ProductService {
             param.setProduct(product);
             param.setParamName(dto.getParamName());
             param.setDataType(dto.getDataType());
+            param.setUnit(dto.getUnit());
             param.setIsMandatory(dto.getIsMandatory());
             return param;
         }).toList();
@@ -237,6 +240,53 @@ public class ProductService {
         categoryRepository.delete(category);
     }
 
+
+    public void deleteParameter(Long productId, Long paramId) {
+
+        ProductParameter parameter = productParameterRepository
+                .findByIdAndProductId(paramId, productId)
+                .orElseThrow(() ->
+                        new RuntimeException("Parameter not found for this product"));
+
+        productParameterRepository.delete(parameter);
+    }
+
+
+    @Transactional
+    public boolean deleteProduct(Long productId) {
+        Optional<Product> productOpt = productRepository.findById(productId);
+        if (productOpt.isPresent()) {
+            productRepository.delete(productOpt.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public List<ProductParameterResponse> getParameterByProductId(Long productId) {
+
+        List<ProductParameter> parameters =
+                productParameterRepository.findByProductIdAndIsMandatoryTrue(productId);
+
+        return parameters.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    private ProductParameterResponse mapToResponse(ProductParameter param) {
+
+        ProductParameterResponse response = new ProductParameterResponse();
+        response.setId(param.getId());
+        response.setParamName(param.getParamName());
+        response.setMandatory(param.getIsMandatory());
+        response.setInputType(param.getDataType());
+
+        // Only for dropdown type
+        response.setOptions(param.getOptions());
+
+        return response;
+    }
 
 	
 }

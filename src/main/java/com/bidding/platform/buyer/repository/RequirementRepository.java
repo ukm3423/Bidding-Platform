@@ -10,5 +10,8 @@ import com.bidding.platform.buyer.model.Requirements;
 public interface RequirementRepository extends JpaRepository<Requirements, Long>{
 
 	List<Requirements> findByBuyerId(Long buyerId);
+	
+	// NEW: Find all Open requirements (Latest first)
+    List<Requirements> findByStatusOrderByCreatedAtDesc(String status);
 
 }

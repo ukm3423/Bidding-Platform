@@ -1,6 +1,8 @@
 package com.bidding.platform.admin.model;
 
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -32,5 +34,10 @@ public class ProductParameter {
 	
 	private DataType dataType;
 	
+	private Double unit;
+	
 	private Boolean isMandatory= true;
+	
+	@Column(name = "option_value")
+    private List<String> options;
 }

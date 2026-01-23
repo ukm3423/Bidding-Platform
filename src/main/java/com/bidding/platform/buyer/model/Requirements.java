@@ -84,4 +84,8 @@ public class Requirements {
     @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("requirement") // Stop recursion
     private List<Bid> bids = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("requirement")
+    private List<RequirementDocument> documents = new ArrayList<>();
 }

@@ -6,10 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bidding.platform.admin.dto.UpdateUserStatusRequest;
 import com.bidding.platform.admin.dto.UserListDto;
 import com.bidding.platform.admin.dto.UserStatsDto;
 import com.bidding.platform.admin.services.UserService;
@@ -18,7 +22,7 @@ import com.bidding.platform.auth.models.Role;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/admin/users")
+@RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
 @CrossOrigin
 public class AdminUserController {
@@ -39,4 +43,11 @@ public class AdminUserController {
         return ResponseEntity.ok(userService.getUserStats());
     }
     
+    @PostMapping("/update-status")
+    public ResponseEntity<String> updateUserStatus(
+            @RequestBody UpdateUserStatusRequest request) {
+
+        userService.updateUserStatus(request.getUserId(), request.getStatus());
+        return ResponseEntity.ok("User status updated successfully");
+    }
 }

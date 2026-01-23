@@ -55,4 +55,12 @@ public class UserService {
         return stats;
     }
 
+    public void updateUserStatus(Long userId, String status) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setStatus(status);
+        userRepository.save(user);
+    }
+
 }

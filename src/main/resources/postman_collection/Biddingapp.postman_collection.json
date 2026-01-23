@@ -1,0 +1,354 @@
+{
+	"info": {
+		"_postman_id": "c6f45d65-7a90-43e9-9a3f-9f02e6fab6c5",
+		"name": "Biddingapp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49554972",
+		"_collection_link": "https://harshikeshsingh-2000-8667278.postman.co/workspace/HARSHIKESH-SINGH's-Workspace~de3856f0-7447-4c8c-8ce8-974b80d7ef9d/collection/49554972-c6f45d65-7a90-43e9-9a3f-9f02e6fab6c5?action=share&source=collection_link&creator=49554972"
+	},
+	"item": [
+		{
+			"name": "send-otp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"harshikesh@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/send-otp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"send-otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "vrify-otp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"harshikesh@gmail.com\",\n  \"otp\": \"437956\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/verify-otp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"verify-otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add-product",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaGlrZXNoQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwibmFtZSI6IkhhcnNoIFNpbmdoIiwiaWF0IjoxNzY3MTIzOTY4LCJleHAiOjE3NjcxMjc1Njh9.5dsN_6pE4cz9any8VEBLc-dMEsj-8XNzNJs9zFyOuySdSdPdur8w3-RJtCS9GObgDHG7sUV1dqNbFS2W8AvEcw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"categoryId\": 1,\n  \"name\": \"Sona Rice\",\n  \"description\": \"Mid Premium Quality\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add-product-param",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaGlrZXNoQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwibmFtZSI6IkhhcnNoIFNpbmdoIiwiaWF0IjoxNzY3MTIzOTY4LCJleHAiOjE3NjcxMjc1Njh9.5dsN_6pE4cz9any8VEBLc-dMEsj-8XNzNJs9zFyOuySdSdPdur8w3-RJtCS9GObgDHG7sUV1dqNbFS2W8AvEcw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"paramName\": \"Moisture Content\",\n        \"dataType\": \"TEXT\",\n        \"isMandatory\": true\n    },\n    {\n        \"paramName\": \"Broken Ratio\",\n        \"dataType\": \"TEXT\",\n        \"isMandatory\": true\n    },\n    {\n        \"paramName\": \"Origin State\",\n        \"dataType\": \"TEXT\",\n        \"isMandatory\": false\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/products/1/parameters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"products",
+						"1",
+						"parameters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllUsers",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Users-stats",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "getAllCategories",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "getProductsByCategoryId",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9CVVlFUiIsIm5hbWUiOiJIQVJTSElLRVNIIFNJTkdIIiwiaWF0IjoxNzY4MzI4MzI0LCJleHAiOjE3NjgzMzE5MjR9._OeOIQDsdtLqAdXc7AzMTHKKOxvAqbg-o40WZLDkNeLg2sm-_f1hGPg5fEh62VDa2oEnnCPvrhtDj5FF5j-F5A",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/buyer/products?categoryId=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"buyer",
+						"products"
+					],
+					"query": [
+						{
+							"key": "categoryId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "postrequirement",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9CVVlFUiIsIm5hbWUiOiJIQVJTSElLRVNIIFNJTkdIIiwiaWF0IjoxNzY4NDU2NTk5LCJleHAiOjE3Njg0NjAxOTl9.TnVz8R3_TCz91H90_vzOsCjK-8vLvj5vRdwC74vGkpHS8dObJNH8z5Fy-TRT5_JQYKhghsVhFtRCUxJSjbFqlw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"productId\": 1,\n  \n  \"quantity\": 500.0,\n  \"quantityUnit\": \"MT\",\n  \"splitOrderAllowed\": true,\n  \"minQuantity\": 50.0,\n  \"rejectionClause\": \"Material rejected if moisture > 14%\",\n  \"additionalDetails\": \"Need urgent delivery within 10 days.\",\n\n  \"deliveryUnitName\": \"Central Warehouse A\",\n  \"deliveryStreet\": \"45 Industrial Area\",\n  \"deliveryLocality\": \"Okhla Phase III\",\n  \"deliveryCity\": \"New Delhi\",\n  \"deliveryState\": \"Delhi\",\n  \"deliveryPincode\": \"110020\",\n  \"deliveryPeriodDays\": 15,\n\n  \"budgetAmount\": 500000.0,\n  \"budgetType\": \"Total\",\n  \"paymentTerms\": \"50% Advance, 50% Delivery\",\n  \"shippingPreference\": \"Seller Arranged\",\n\n  \"dynamicValues\": {\n    \"1\": \"13%\",   \n    \"2\": \"2%\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/buyer/requirements",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"buyer",
+						"requirements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "myrequirementsforbuyer",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9CVVlFUiIsIm5hbWUiOiJIQVJTSElLRVNIIFNJTkdIIiwiaWF0IjoxNzY4NDg0MTg0LCJleHAiOjE3Njg0ODc3ODR9.CFqcaq6YQZQdWJf1yCwI5vfkcY0rxrwvESo6KX06JzrT6QXGxY9Vyqx7g6W7GOzOT7EmQcMTBW6lGdRerz1ekA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/buyer/requirements/my-posts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"buyer",
+						"requirements",
+						"my-posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "requirementsforbidding",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "PlaceBid",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "bidstats",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWdoYUBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9TRUxMRVIiLCJuYW1lIjoiTWVnaGEgS3VtYXJpIiwiaWF0IjoxNzY4OTA3MzQ0LCJleHAiOjE3Njg5MTA5NDR9.9wOFj4gtyZkbRtX6ub1hEFagGgBO7l_V9CcXLXXXHjGN-13wjHwiDo14bcAKXOpK-UEGyXSI39-W7xbiKxChYw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/seller/bids/stats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"seller",
+						"bids",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BidListforSeller",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
