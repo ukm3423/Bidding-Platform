@@ -34,6 +34,8 @@ import com.bidding.platform.seller.services.SellerService;
 import com.bidding.platform.users.repo.CompanyRepository;
 import com.bidding.platform.users.repo.ContactDetailsRepository;
 
+import jakarta.validation.Valid;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/seller")
@@ -110,8 +112,8 @@ public class SellerController {
 	
 	@PostMapping("/bids")
     public ResponseEntity<Bid> placeBid(
-            @RequestBody BidPlaceRequest request,
-            Authentication authentication
+    		@Valid @RequestBody BidPlaceRequest request,
+            @Valid Authentication authentication
     ) {
         User seller = getUserFromAuth(authentication);
         return ResponseEntity.ok(sellerService.placeBid(seller.getId(), request));

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bidding.platform.auth.models.User;
 import com.bidding.platform.auth.repository.UserRepository;
+import com.bidding.platform.buyer.dto.BuyerBidPageDto;
 import com.bidding.platform.buyer.dto.RequirementPostRequest;
 import com.bidding.platform.buyer.model.Requirements;
 import com.bidding.platform.buyer.service.RequirementService;
@@ -39,7 +40,7 @@ public class BuyerRequirementController {
     public ResponseEntity<Requirements> postRequirement(
             @Valid @RequestPart("data") RequirementPostRequest request,
             @RequestPart(value = "files", required = false) MultipartFile[] files,
-            Authentication authentication
+            @Valid Authentication authentication
     ) {
 
         String email = authentication.getName();
@@ -66,5 +67,10 @@ public class BuyerRequirementController {
     @GetMapping("/{id}/bids")
     public ResponseEntity<List<Bid>> getViewBids(@PathVariable Long id) {
         return ResponseEntity.ok(requirementService.getBidsForRequirement(id));
+    }
+    
+    @GetMapping("/{id}/bids-view")
+    public ResponseEntity<BuyerBidPageDto> getRequirementWithBids(@PathVariable Long id) {
+        return ResponseEntity.ok(requirementService.getRequirementWithBids(id));
     }
 }

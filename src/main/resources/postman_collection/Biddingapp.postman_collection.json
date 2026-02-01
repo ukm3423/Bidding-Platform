@@ -145,25 +145,110 @@
 		},
 		{
 			"name": "getAllUsers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaGlrZXNoQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwibmFtZSI6IkhhcnNoIFNpbmdoIiwiaWF0IjoxNzY3MTc0MzQwLCJleHAiOjE3NjcxNzc5NDB9.t0A_aeRlm7X3H1JDZYDj9GtxWmd_lIpk_hpnqDCBpx4a9Gu89AnJ2GG8k5ZCgBhGh-_1yx8d_PBI4dxG_lyO2w",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"categoryId\": 1,\n  \"name\": \"Sona Rice\",\n  \"description\": \"Mid Premium Quality\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/users?role=ADMIN",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"users"
+					],
+					"query": [
+						{
+							"key": "role",
+							"value": "ADMIN"
+						}
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Users-stats",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaGlrZXNoQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwibmFtZSI6IkhhcnNoIFNpbmdoIiwiaWF0IjoxNzY3MTc0MzQwLCJleHAiOjE3NjcxNzc5NDB9.t0A_aeRlm7X3H1JDZYDj9GtxWmd_lIpk_hpnqDCBpx4a9Gu89AnJ2GG8k5ZCgBhGh-_1yx8d_PBI4dxG_lyO2w",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/admin/users/stats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"users",
+						"stats"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "getAllCategories",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaGlrZXNoQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwibmFtZSI6IkhhcnNoIFNpbmdoIiwiaWF0IjoxNzY3MTc4MDk2LCJleHAiOjE3NjcxODE2OTZ9.XEkWEpcC9buIn9QQZmm4qNgz0Kpiv0dsTEgZyyqQ0tNZGrYTGCcfnIl_m3rAFGJjShqGWtMhVAbtBgE41cpVDw",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/admin/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"categories"
+					]
+				}
 			},
 			"response": []
 		},
@@ -298,16 +383,69 @@
 		{
 			"name": "requirementsforbidding",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWdoYUBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9TRUxMRVIiLCJuYW1lIjoiTWVnaGEgS3VtYXJpIiwiaWF0IjoxNzY4NzQ0OTk0LCJleHAiOjE3Njg3NDg1OTR9.VFB1WBlY5dkkN1qRzkHfbNzxoTOoKeW-hiZIMBAafyaRGls2YYcvgT3K0f4QtsQX0qsqevHWpLesRol6354atw",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/seller/requirements",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"seller",
+						"requirements"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "PlaceBid",
 			"request": {
-				"method": "GET",
-				"header": []
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWdoYUBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9TRUxMRVIiLCJuYW1lIjoiTWVnaGEgS3VtYXJpIiwiaWF0IjoxNzY4NzQ0OTk0LCJleHAiOjE3Njg3NDg1OTR9.VFB1WBlY5dkkN1qRzkHfbNzxoTOoKeW-hiZIMBAafyaRGls2YYcvgT3K0f4QtsQX0qsqevHWpLesRol6354atw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"requirementId\": 4,\n    \"bidAmount\": 18200.0,\n    \"deliveryTime\": \"6-8 days\",\n    \"moq\": 100,\n    \"offeredQty\": 500\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/seller/bids",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"seller",
+						"bids"
+					]
+				}
 			},
 			"response": []
 		},
@@ -345,8 +483,155 @@
 		{
 			"name": "BidListforSeller",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWdoYUBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9TRUxMRVIiLCJuYW1lIjoiTWVnaGEgS3VtYXJpIiwiaWF0IjoxNzY4OTA3MzQ0LCJleHAiOjE3Njg5MTA5NDR9.9wOFj4gtyZkbRtX6ub1hEFagGgBO7l_V9CcXLXXXHjGN-13wjHwiDo14bcAKXOpK-UEGyXSI39-W7xbiKxChYw",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/seller/bids",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"seller",
+						"bids"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RequirementStats",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaGlrZXNoQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwibmFtZSI6IkhhcnNoIFNpbmdoIiwiaWF0IjoxNzY5NjE1OTQzLCJleHAiOjE3Njk2MTk1NDN9.S1XmPQ_Og8BTq2Mh7N3CIaOh8AM5adUgnib7wv6NpxD96nGYKvLSNcLopRbx3GjA85mgebQ79DGOaBDIxlMnYQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/admin/requirements/stats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"requirements",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getallrequirements",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaGlrZXNoQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwibmFtZSI6IkhhcnNoIFNpbmdoIiwiaWF0IjoxNzY5NjE2Nzg5LCJleHAiOjE3Njk2MjAzODl9.QhZKHwjK1hws-5P3R5IwKZMA_v7rBTfgE8WQ-3CkwkXVkuUVbRkr1cG7izoKqcWQFwImepTvpF-uQHohXgqZsg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/admin/requirements",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"requirements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RequirementDetails",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaGlrZXNoQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwibmFtZSI6IkhhcnNoIFNpbmdoIiwiaWF0IjoxNzY5NjI1MjAwLCJleHAiOjE3Njk2Mjg4MDB9.MT0SCSU-2_05HPMxLhUy9xzZWW71kQD748NxlGoWwhLmUvJRjQnA1_r75Ns2nPZPXgdCn1b7n7cSE4pUcfuVjQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/admin/requirements/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"requirements",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RequirementBidView",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXJzaEBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9CVVlFUiIsIm5hbWUiOiJIQVJTSElLRVNIIFNJTkdIIiwiaWF0IjoxNzY5NzEzNzk3LCJleHAiOjE3Njk3MTczOTd9.QOJUhADWYMeaiJgkFeS8HgdF2_3bRdUwmB3I9QHEmAenpO_HhUv5pAfPdjHLlVa7pfVDg7aAw0tj9l9fsYHFYQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/buyer/requirements/5/bids-view",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"buyer",
+						"requirements",
+						"5",
+						"bids-view"
+					]
+				}
 			},
 			"response": []
 		}

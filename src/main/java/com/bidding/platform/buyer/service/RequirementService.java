@@ -1,7 +1,10 @@
 package com.bidding.platform.buyer.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ import com.bidding.platform.admin.repository.ProductParameterRepository;
 import com.bidding.platform.admin.repository.ProductRepository;
 import com.bidding.platform.auth.models.User;
 import com.bidding.platform.auth.repository.UserRepository;
+import com.bidding.platform.buyer.dto.BuyerBidPageDto;
+import com.bidding.platform.buyer.dto.BuyerBidPageDto.BidRowDto;
 import com.bidding.platform.buyer.dto.RequirementPostRequest;
 import com.bidding.platform.buyer.model.RequirementDocument;
 import com.bidding.platform.buyer.model.RequirementValue;
@@ -192,6 +197,54 @@ public class RequirementService {
 
         return savedRequirement;
     }
+    
+    public BuyerBidPageDto getRequirementWithBids(Long reqId) {
+        Requirements req = requirementRepository.findById(reqId)
+                .orElseThrow(() -> new RuntimeException("Requirement not found"));
+
+        BuyerBidPageDto dto = new BuyerBidPageDto();
+        
+        // 1. Map Header
+        dto.setReqId(req.getId());
+        dto.setStatus(req.getStatus());
+        dto.setQuantity(req.getQuantity() + " " + (req.getQuantityUnit() != null ? req.getQuantityUnit() : ""));
+        
+        if (req.getProduct() != null) {
+            dto.setProductName(req.getProduct().getName());
+            dto.setCategory(req.getProduct().getCategory() != null ? req.getProduct().getCategory().getName() : "General");
+        }
+
+        // 2. Map Dynamic Specs (Brand, Warranty, etc.)
+        Map<String, String> specs = new HashMap<>();
+        if (req.getValues() != null) {
+            req.getValues().forEach(val -> {
+                if (val.getParameter() != null) {
+                    specs.put(val.getParameter().getParamName(), val.getValue());
+                }
+            });
+        }
+        dto.setSpecs(specs);
+
+        // 3. Map Bids for Table
+        List<BidRowDto> bidList = new ArrayList<>();
+        if (req.getBids() != null) {
+            bidList = req.getBids().stream().map(bid -> {
+                BidRowDto row = new BidRowDto();
+                row.setBidId(bid.getId());
+                row.setSellerName(bid.getSeller() != null ? bid.getSeller().getFullname() : "Unknown Seller");
+                row.setBidAmount(bid.getBidAmount());
+                row.setMoq(bid.getMoq() + " " + req.getQuantityUnit());
+                row.setOfferedQty(bid.getOfferedQty() + " " + req.getQuantityUnit());
+                row.setDeliveryTime(bid.getDeliveryTime());
+                row.setUpdatedAt(bid.getCreatedAt().toLocalDate());
+                return row;
+            }).collect(Collectors.toList());
+        }
+        dto.setBids(bidList);
+
+        return dto;
+    }
+    
 
  // 1. Get Requirements for a specific Buyer
     public List<Requirements> getBuyerRequirements(Long buyerId) {
